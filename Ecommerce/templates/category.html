@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+{% if category %}
+    {{category.description|truncatewords:155}}
+{% else %}
+Welcome to A-M Miniature Automobiles  where you can buys different items.....
+{% endif %}
+{% endblock%}
+
+{% block title %}
+{% if category %}
+    {{category.name}} - A-M Miniature Automobiles
+{% else %}
+See our New Collections - A-M Miniature Automobiles
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx-auto">
+        <p><a href="{% url 'shop:allProdCat' %}">Our Product Collection</a> </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="mx-auto">
+    {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+    <br>
+    <div>
+        <h1 class="text-center my_title">{{category.name}}</h1>
+        <p class="text-justify">{{category.description}}</p>
+    </div>
+    {% else %}
+    <div>
+        <img class="my_image my_image_passing"src="{% static 'img/banner.png' %}" alt="our products">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title"> New Cars in 2023 </h1>
+        <p class="text-justify">
+            CarDekho brings a complete range of new cars in 2023 in India with prices. You can search cars by applying filters such as by price, by bodytype, by brand, by seating capacity & more. Also, stay updated with upcoming cars, electric cars in India, compare cars in your price range and stay tuned to the latest car news.
+        </p>
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="row max_auto">
+            {% for product in products.object_list %}
+            <div class="my_bottom_margin col-9 col-sm-12 col-md-4  col-lg-4 ">
+                {% comment %} <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-md-12 col-lg-4 "> {% endcomment %}
+                <div class="card text-center" style="min-with:18rem;">
+                    <a href="{{product.get_url}}"><img class="card-img-top my_image"src="{{product.image.url}}" alt="{{product.name}}"></a>
+                    <div class="card-body">
+                        <h1>{{product.name}}</h1>
+                        <p>Rs {{product.price}} Lakh*</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1 %}
+                <hr>
+                <div class="text-center">
+                    {% for pg in products.paginator.page_range %}
+                    <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+        </div>
+        <br>
+    </div>
+</div>
+{% endblock %}
